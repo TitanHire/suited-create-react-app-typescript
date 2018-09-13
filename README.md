@@ -65,6 +65,11 @@ To fix this, create a new file *in the root of the project* called `tsconfig.tes
 
 ## Changelog
 
+### 2.17.1 (Suited)
+* dev webpack: add styled-components plugins for better DX - @newtmitch
+
+### Branch point for the Suited customizations
+
 ### 2.17.0
 * Update migration instructions - @DorianGrey
 * tslint updates - @alexandrudanpop
