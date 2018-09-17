@@ -46,12 +46,42 @@ function getServedPath(appPackageJson) {
   return ensureSlash(servedUrl, true);
 }
 
+function getAppHtmlFilename() {
+  // parse the custom config to set up a custom entry point, otehrwise default to index
+  let filename;
+  try {
+    const appLoc = resolveApp('customBuildConfig.js');
+    const customConfig = require(appLoc);
+    filename = customConfig && customConfig.appHtml ? customConfig.appHtml : 'index.html';
+  } catch(err) {
+    filename = 'index.html'
+  }
+  return filename;
+}
+
+function getEntryName() {
+   // parse the custom config to set up a custom entry point, otehrwise default to main
+   let entryName;
+   try {
+     const appLoc = resolveApp('customBuildConfig.js');
+     const customConfig = require(appLoc);
+     entryName = customConfig && customConfig.entryName ? customConfig.entryName : 'main';
+   } catch(err) {
+     entryName = 'main'
+   }
+   return entryName;
+}
+
+
+
 // config after eject: we're in ./config/
 module.exports = {
   dotenv: resolveApp('.env'),
   appBuild: resolveApp('build'),
   appPublic: resolveApp('public'),
-  appHtml: resolveApp('public/index.html'),
+  appHtml: resolveApp(`public/${getAppHtmlFilename()}`),
+  entryName: getEntryName(),
+  customBuildConfig: resolveApp('customBuildConfig.js'),
   appIndexJs: resolveApp('src/index.tsx'),
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
@@ -74,7 +104,9 @@ module.exports = {
   appPath: resolveApp('.'),
   appBuild: resolveApp('build'),
   appPublic: resolveApp('public'),
-  appHtml: resolveApp('public/index.html'),
+  appHtml: resolveApp(`public/${getAppHtmlFilename()}`),
+  entryName: getEntryName(),
+  customBuildConfig: resolveApp('customBuildConfig.js'),
   appIndexJs: resolveApp('src/index.tsx'),
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
@@ -107,7 +139,9 @@ if (
     appPath: resolveApp('.'),
     appBuild: resolveOwn('../../build'),
     appPublic: resolveOwn('template/public'),
-    appHtml: resolveOwn('template/public/index.html'),
+    appHtml: resolveOwn(`template/public/${getAppHtmlFilename()}`),
+    entryName: getEntryName(),
+    customBuildConfig: resolveOwn('template/customBuildConfig.js'),
     appIndexJs: resolveOwn('template/src/index.tsx'),
     appPackageJson: resolveOwn('package.json'),
     appSrc: resolveOwn('template/src'),
